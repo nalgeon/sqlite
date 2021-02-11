@@ -23,6 +23,7 @@ jobs:
                   7z x src.zip
 
             - name: Compile sources
+              shell: bash
               run: |
                   mkdir dist
                   gcc.exe -I. src/shell.c src/sqlite3.c -o dist/sqlite3.exe \
