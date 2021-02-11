@@ -6,40 +6,21 @@ on:
             - "*"
 
 jobs:
-    publish:
-        name: Publish for ${{ matrix.os }}
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                include:
-                    - os: ubuntu-latest
-                      artifact_name: sqlite3-stats.so
-                    - os: windows-latest
-                      artifact_name: sqlite3-stats.dll
-                    - os: macos-latest
-                      artifact_name: sqlite3-stats.dylib
-
+    publish-windows:
+        name: Publish for Windows
+        runs-on: windows-latest
         steps:
             - uses: actions/checkout@v2
 
-            - run: mkdir dist
-
-            # - name: Build for Linux
-            #   if: matrix.os == 'ubuntu-latest'
-            #   run: gcc -DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_EXPLAIN_COMMENTS -DSQLITE_HAVE_ZLIB -DSQLITE_INTROSPECTION_PRAGMAS -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION -DSQLITE_ENABLE_STMTVTAB -DSQLITE_ENABLE_DBPAGE_VTAB -DSQLITE_ENABLE_DBSTAT_VTAB -DSQLITE_ENABLE_OFFSET_SQL_FUNC -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DHAVE_READLINE -ldl -lz -lm -lreadline -lncurses src/shell.c src/sqlite3.c -o dist/sqlite3-linux
-
-            - name: Build for Windows
-              if: matrix.os == 'windows-latest'
-              run: gcc -DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_EXPLAIN_COMMENTS -DSQLITE_HAVE_ZLIB -DSQLITE_INTROSPECTION_PRAGMAS -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION -DSQLITE_ENABLE_STMTVTAB -DSQLITE_ENABLE_DBPAGE_VTAB -DSQLITE_ENABLE_DBSTAT_VTAB -DSQLITE_ENABLE_OFFSET_SQL_FUNC -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DHAVE_READLINE -ldl -lz -lm -lreadline -lncurses src/shell.c src/sqlite3.c -o dist/sqlite3-windows.exe
-
-            # - name: Build for macOS
-            #   if: matrix.os == 'macos-latest'
-            #   run: gcc -DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_EXPLAIN_COMMENTS -DSQLITE_HAVE_ZLIB -DSQLITE_INTROSPECTION_PRAGMAS -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION -DSQLITE_ENABLE_STMTVTAB -DSQLITE_ENABLE_DBPAGE_VTAB -DSQLITE_ENABLE_DBSTAT_VTAB -DSQLITE_ENABLE_OFFSET_SQL_FUNC -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DHAVE_READLINE -ldl -lz -lm -lreadline -lncurses src/shell.c src/sqlite3.c -o dist/sqlite3-macos
+            - name: Build
+              run: |
+                  mkdir dist
+                  gcc.exe -DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_EXPLAIN_COMMENTS -DSQLITE_INTROSPECTION_PRAGMAS -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION -DSQLITE_ENABLE_STMTVTAB -DSQLITE_ENABLE_DBPAGE_VTAB -DSQLITE_ENABLE_DBSTAT_VTAB -DSQLITE_ENABLE_OFFSET_SQL_FUNC -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -Os -fpic -DWIN64 -m64 -I. -shared src/shell.c src/sqlite3.c -o dist/sqlite3.exe
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  file: dist/${{ matrix.artifact_name }}
-                  asset_name: ${{ matrix.asset_name }}
+                  file: dist/sqlite3.exe
+                  asset_name: sqlite3.exe
                   tag: ${{ github.ref }}
