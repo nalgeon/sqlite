@@ -12,7 +12,7 @@ env:
 jobs:
     build-ubuntu:
         name: Build for Ubuntu
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-20.04
         steps:
             - uses: actions/checkout@v2
 
@@ -42,14 +42,15 @@ jobs:
                     -DSQLITE_ENABLE_FTS5 \
                     src/shell.c src/sqlite3.c -o dist/sqlite3-ubuntu \
                     -ldl -lz -lm -lreadline -lncurses
+                  chmod +x dist/sqlite3-ubuntu
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: dist/sqlite3-ubuntu
-                  asset_name: sqlite3
-                  tag: sqlite-${{ github.ref }}-ubuntu
+                  asset_name: sqlite3-ubuntu
+                  tag: ${{ github.ref }}
 
     build-windows:
         name: Build for Windows
@@ -88,7 +89,7 @@ jobs:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: dist/sqlite3.exe
                   asset_name: sqlite3.exe
-                  tag: sqlite-${{ github.ref }}-windows
+                  tag: ${{ github.ref }}
 
     build-macos:
         name: Build for macOS
@@ -122,11 +123,12 @@ jobs:
                     -DSQLITE_ENABLE_FTS5 \
                     src/shell.c src/sqlite3.c -o dist/sqlite3-macos \
                     -ldl -lz -lm -lreadline -lncurses
+                  chmod +x dist/sqlite3-macos
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: dist/sqlite3-macos
-                  asset_name: sqlite3
-                  tag: sqlite-${{ github.ref }}-macos
+                  asset_name: sqlite3-macos
+                  tag: ${{ github.ref }}
