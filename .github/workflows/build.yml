@@ -16,9 +16,6 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
-            - name: Install packages
-              run: sudo apt-get install -y build-essential libncurses-dev libreadline-dev zlib1g-dev
-
             - name: Download sources
               run: |
                   curl -L http://sqlite.org/$SQLITE_RELEASE_YEAR/sqlite-amalgamation-$SQLITE_VERSION.zip --output src.zip
@@ -28,10 +25,10 @@ jobs:
             - name: Compile sources
               run: |
                   mkdir dist
-                  gcc -ldl -lz -lm -lreadline -lncurses src/shell.c src/sqlite3.c -o dist/sqlite3-ubuntu \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DSQLITE_HAVE_ZLIB \
+                  gcc \
                     -DHAVE_READLINE \
+                    -DSQLITE_HAVE_ZLIB \
+                    -DSQLITE_THREADSAFE=0 \
                     -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
                     -DSQLITE_INTROSPECTION_PRAGMAS \
                     -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
@@ -42,7 +39,9 @@ jobs:
                     -DSQLITE_ENABLE_JSON1 \
                     -DSQLITE_ENABLE_RTREE \
                     -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5
+                    -DSQLITE_ENABLE_FTS5 \
+                    src/shell.c src/sqlite3.c -o dist/sqlite3-ubuntu \
+                    -ldl -lz -lm -lreadline -lncurses
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
@@ -106,10 +105,10 @@ jobs:
             - name: Compile sources
               run: |
                   mkdir dist
-                  gcc -ldl -lz -lm -lreadline -lncurses src/shell.c src/sqlite3.c -o dist/sqlite3-macos \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DSQLITE_HAVE_ZLIB \
+                  gcc \
                     -DHAVE_READLINE \
+                    -DSQLITE_HAVE_ZLIB \
+                    -DSQLITE_THREADSAFE=0 \
                     -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
                     -DSQLITE_INTROSPECTION_PRAGMAS \
                     -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
@@ -120,7 +119,9 @@ jobs:
                     -DSQLITE_ENABLE_JSON1 \
                     -DSQLITE_ENABLE_RTREE \
                     -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5
+                    -DSQLITE_ENABLE_FTS5 \
+                    src/shell.c src/sqlite3.c -o dist/sqlite3-macos \
+                    -ldl -lz -lm -lreadline -lncurses
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
