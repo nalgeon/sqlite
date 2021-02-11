@@ -1,0 +1,128 @@
+name: Build and publish
+
+on:
+    push:
+        tags:
+            - "*"
+
+env:
+    SQLITE_RELEASE_YEAR: "2021"
+    SQLITE_VERSION: "3340100"
+
+jobs:
+    build-ubuntu:
+        name: Build for Ubuntu
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Download sources
+              run: |
+                  curl -L http://sqlite.org/$SQLITE_RELEASE_YEAR/sqlite-amalgamation-$SQLITE_VERSION.zip --output src.zip
+                  unzip src.zip
+                  mv sqlite-amalgamation-$SQLITE_VERSION src
+
+            - name: Compile sources
+              run: |
+                  mkdir dist
+                  gcc -ldl -lz -lm -lreadline -lncurses src/shell.c src/sqlite3.c -o dist/sqlite3-ubuntu \
+                    -DSQLITE_THREADSAFE=0 \
+                    -DSQLITE_HAVE_ZLIB \
+                    -DHAVE_READLINE \
+                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
+                    -DSQLITE_INTROSPECTION_PRAGMAS \
+                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
+                    -DSQLITE_ENABLE_STMTVTAB \
+                    -DSQLITE_ENABLE_DBPAGE_VTAB \
+                    -DSQLITE_ENABLE_DBSTAT_VTAB \
+                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
+                    -DSQLITE_ENABLE_JSON1 \
+                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_FTS4 \
+                    -DSQLITE_ENABLE_FTS5
+
+            - name: Upload binaries to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: dist/sqlite3-ubuntu
+                  asset_name: sqlite3
+                  tag: sqlite-${{ github.ref }}-ubuntu
+
+    build-windows:
+        name: Build for Windows
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Download sources
+              shell: bash
+              run: |
+                  curl -L http://sqlite.org/$SQLITE_RELEASE_YEAR/sqlite-amalgamation-$SQLITE_VERSION.zip --output src.zip
+                  7z x src.zip
+                  mv sqlite-amalgamation-$SQLITE_VERSION src
+
+            - name: Compile sources
+              shell: bash
+              run: |
+                  mkdir dist
+                  gcc -I. src/shell.c src/sqlite3.c -o dist/sqlite3.exe \
+                    -DSQLITE_THREADSAFE=0 \
+                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
+                    -DSQLITE_INTROSPECTION_PRAGMAS \
+                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
+                    -DSQLITE_ENABLE_STMTVTAB \
+                    -DSQLITE_ENABLE_DBPAGE_VTAB \
+                    -DSQLITE_ENABLE_DBSTAT_VTAB \
+                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
+                    -DSQLITE_ENABLE_JSON1 \
+                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_FTS4 \
+                    -DSQLITE_ENABLE_FTS5
+
+            - name: Upload binaries to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: dist/sqlite3.exe
+                  asset_name: sqlite3.exe
+                  tag: sqlite-${{ github.ref }}-windows
+
+    build-macos:
+        name: Build for macOS
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Download sources
+              run: |
+                  curl -L http://sqlite.org/$SQLITE_RELEASE_YEAR/sqlite-amalgamation-$SQLITE_VERSION.zip --output src.zip
+                  7z x src.zip
+                  mv sqlite-amalgamation-$SQLITE_VERSION src
+
+            - name: Compile sources
+              run: |
+                  mkdir dist
+                  gcc -ldl -lz -lm -lreadline -lncurses src/shell.c src/sqlite3.c -o dist/sqlite3-macos \
+                    -DSQLITE_THREADSAFE=0 \
+                    -DSQLITE_HAVE_ZLIB \
+                    -DHAVE_READLINE \
+                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
+                    -DSQLITE_INTROSPECTION_PRAGMAS \
+                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
+                    -DSQLITE_ENABLE_STMTVTAB \
+                    -DSQLITE_ENABLE_DBPAGE_VTAB \
+                    -DSQLITE_ENABLE_DBSTAT_VTAB \
+                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
+                    -DSQLITE_ENABLE_JSON1 \
+                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_FTS4 \
+                    -DSQLITE_ENABLE_FTS5
+
+            - name: Upload binaries to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: dist/sqlite3-macos
+                  asset_name: sqlite3
+                  tag: sqlite-${{ github.ref }}-macos
