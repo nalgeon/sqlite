@@ -52,7 +52,7 @@ jobs:
 
     build-windows:
         name: Build for Windows
-        runs-on: windows-latest
+        runs-on: windows-2019
         steps:
             - name: Download sources
               shell: bash
@@ -89,7 +89,7 @@ jobs:
 
     build-macos:
         name: Build for macOS
-        runs-on: macos-latest
+        runs-on: macos-10.15
         steps:
             - name: Download sources
               run: |
