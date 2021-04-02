@@ -7,7 +7,7 @@ on:
 
 env:
     SQLITE_RELEASE_YEAR: "2021"
-    SQLITE_VERSION: "3350300"
+    SQLITE_VERSION: "3350400"
 
 jobs:
     download-sources:
@@ -54,6 +54,7 @@ jobs:
                     -DSQLITE_ENABLE_RTREE \
                     -DSQLITE_ENABLE_FTS4 \
                     -DSQLITE_ENABLE_FTS5 \
+                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
                     src/shell.c src/sqlite3.c -o dist/sqlite3-ubuntu \
                     -ldl -lz -lm -lreadline -lncurses
                   chmod +x dist/sqlite3-ubuntu
@@ -92,7 +93,8 @@ jobs:
                     -DSQLITE_ENABLE_JSON1 \
                     -DSQLITE_ENABLE_RTREE \
                     -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5
+                    -DSQLITE_ENABLE_FTS5 \
+                    -DSQLITE_ENABLE_MATH_FUNCTIONS
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
@@ -130,6 +132,7 @@ jobs:
                     -DSQLITE_ENABLE_RTREE \
                     -DSQLITE_ENABLE_FTS4 \
                     -DSQLITE_ENABLE_FTS5 \
+                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
                     src/shell.c src/sqlite3.c -o dist/sqlite3-macos \
                     -ldl -lz -lm -lreadline -lncurses
                   chmod +x dist/sqlite3-macos
