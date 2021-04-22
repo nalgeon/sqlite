@@ -6,4 +6,4 @@ Builds and publishes SQLite shell for different OS:
 -   Windows shell (64-bit). Because SQLite website only provides 32-bit shell 🤷
 -   macOS shell. Just for convenience.
 
-Latest release: [3.35.4](https://github.com/nalgeon/sqlite/releases/latest)
+Latest release: [3.35.5](https://github.com/nalgeon/sqlite/releases/latest)
