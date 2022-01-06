@@ -41,20 +41,23 @@ jobs:
                   mkdir dist
                   gcc \
                     -DHAVE_READLINE \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_INTROSPECTION_PRAGMAS \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_ENABLE_STMTVTAB \
                     -DSQLITE_ENABLE_DBPAGE_VTAB \
                     -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
                     -DSQLITE_ENABLE_FTS4 \
                     -DSQLITE_ENABLE_FTS5 \
+                    -DSQLITE_ENABLE_GEOPOLY \
+                    -DSQLITE_ENABLE_JSON1 \
                     -DSQLITE_ENABLE_MATH_FUNCTIONS \
+                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
+                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_STAT4 \
+                    -DSQLITE_ENABLE_STMTVTAB \
+                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
+                    -DSQLITE_HAVE_ZLIB \
+                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
+                    -DSQLITE_THREADSAFE=0 \
+                    -DUSE_URI \
                     src/shell.c src/sqlite3.c -o dist/sqlite3-ubuntu \
                     -ldl -lz -lm -lreadline -lncurses
                   chmod +x dist/sqlite3-ubuntu
@@ -82,19 +85,22 @@ jobs:
               run: |
                   mkdir dist
                   gcc -I. src/shell.c src/sqlite3.c -o dist/sqlite3.exe \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_INTROSPECTION_PRAGMAS \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_ENABLE_STMTVTAB \
                     -DSQLITE_ENABLE_DBPAGE_VTAB \
                     -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
                     -DSQLITE_ENABLE_FTS4 \
                     -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS
+                    -DSQLITE_ENABLE_GEOPOLY \
+                    -DSQLITE_ENABLE_JSON1 \
+                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
+                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
+                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_STAT4 \
+                    -DSQLITE_ENABLE_STMTVTAB \
+                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
+                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
+                    -DSQLITE_THREADSAFE=0 \
+                    -DUSE_URI
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
@@ -119,20 +125,23 @@ jobs:
                   mkdir dist
                   gcc \
                     -DHAVE_READLINE \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_INTROSPECTION_PRAGMAS \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_ENABLE_STMTVTAB \
                     -DSQLITE_ENABLE_DBPAGE_VTAB \
                     -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
                     -DSQLITE_ENABLE_FTS4 \
                     -DSQLITE_ENABLE_FTS5 \
+                    -DSQLITE_ENABLE_GEOPOLY \
+                    -DSQLITE_ENABLE_JSON1 \
                     -DSQLITE_ENABLE_MATH_FUNCTIONS \
+                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
+                    -DSQLITE_ENABLE_RTREE \
+                    -DSQLITE_ENABLE_STAT4 \
+                    -DSQLITE_ENABLE_STMTVTAB \
+                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
+                    -DSQLITE_HAVE_ZLIB \
+                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
+                    -DSQLITE_THREADSAFE=0 \
+                    -DUSE_URI \
                     src/shell.c src/sqlite3.c -o dist/sqlite3-macos \
                     -ldl -lz -lm -lreadline -lncurses
                   chmod +x dist/sqlite3-macos
