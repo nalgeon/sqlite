@@ -7,7 +7,7 @@ on:
 
 env:
     SQLITE_RELEASE_YEAR: "2022"
-    SQLITE_VERSION: "3380200"
+    SQLITE_VERSION: "3380300"
 
 jobs:
     download-sources:
