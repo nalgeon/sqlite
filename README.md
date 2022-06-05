@@ -26,4 +26,4 @@ The list of enabled features:
 - `SQLITE_THREADSAFE=0`. Turns off support for multithreaded environment.
 - `USE_URI`. Enables [URI](https://sqlite.org/uri.html) connection strings.
 
-Latest release: [3.38.3](https://github.com/nalgeon/sqlite/releases/latest)
+Latest release: [3.38.5](https://github.com/nalgeon/sqlite/releases/latest)
