@@ -112,7 +112,7 @@ jobs:
 
     build-macos:
         name: Build for macOS
-        runs-on: macos-10.15
+        runs-on: macos-11
         needs: download-sources
         steps:
             - uses: actions/download-artifact@v2
