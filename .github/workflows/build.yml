@@ -21,7 +21,7 @@ jobs:
                   mv sqlite-amalgamation-$SQLITE_VERSION src
 
             - name: Store sources
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                   name: sqlite-sources
                   path: src
@@ -31,7 +31,7 @@ jobs:
         runs-on: ubuntu-20.04
         needs: download-sources
         steps:
-            - uses: actions/download-artifact@v2
+            - uses: actions/download-artifact@v3
               with:
                   name: sqlite-sources
                   path: src
@@ -75,7 +75,7 @@ jobs:
         runs-on: windows-2019
         needs: download-sources
         steps:
-            - uses: actions/download-artifact@v2
+            - uses: actions/download-artifact@v3
               with:
                   name: sqlite-sources
                   path: src
@@ -115,7 +115,7 @@ jobs:
         runs-on: macos-11
         needs: download-sources
         steps:
-            - uses: actions/download-artifact@v2
+            - uses: actions/download-artifact@v3
               with:
                   name: sqlite-sources
                   path: src
