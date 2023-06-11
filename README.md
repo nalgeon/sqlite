@@ -28,7 +28,7 @@ The list of enabled features:
 -   `SQLITE_HAVE_ZLIB`. Required for [SQL Archive](https://sqlite.org/sqlar.html) support. Not available on Windows.
 -   `SQLITE_LIKE_DOESNT_MATCH_BLOBS`. Forces LIKE and GLOB to return FALSE for BLOBs.
 -   `SQLITE_THREADSAFE=0`. Turns off support for multithreaded environment.
--   `USE_URI`. Enables [URI](https://sqlite.org/uri.html) connection strings.
+-   `SQLITE_USE_URI`. Enables [URI](https://sqlite.org/uri.html) connection strings.
 
 Latest release: [3.42.0](https://github.com/nalgeon/sqlite/releases/3.42.0)
 
@@ -38,14 +38,14 @@ Latest release: [3.42.0](https://github.com/nalgeon/sqlite/releases/3.42.0)
 
 ```
   sqlean shell =
-┌────────────────────────┐
-│ sqlite shell           │
-├ + ─────────────────────┤
-│ crypt  define  fileio  │
-│ fuzzy  math    regexp  │
-│ stats  text    unicode │
-│ uuid   vsv             │
-└────────────────────────┘
+┌─────────────────────────┐
+│ sqlite shell            │
+├ + ──────────────────────┤
+│ crypto  define  fileio  │
+│ fuzzy   math    regexp  │
+│ stats   text    unicode │
+│ uuid    vsv             │
+└─────────────────────────┘
 ```
 
 Builds are available for every OS:
