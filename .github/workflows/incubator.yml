@@ -13,6 +13,9 @@ jobs:
         name: Download and store sources
         runs-on: ubuntu-20.04
         steps:
+            - name: Checkout sources
+              uses: actions/checkout@v3
+
             - name: Download sqlite
               run: |
                   curl -L https://github.com/sqlite/sqlite/raw/master/src/test_windirent.h --output src/test_windirent.h
