@@ -59,7 +59,7 @@ compile-sqlean-linux:
 	chmod +x dist/sqlean-ubuntu
 
 compile-sqlean-windows:
-	gcc -O1 -I. $(SQLEAN_INC) $(SQLITE_SRC) -o dist/sqlean.exe $(SQLITE_OPT) $(SQLEAN_OPT)
+	gcc -O1 -I. $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean.exe $(SQLITE_OPT) $(SQLEAN_OPT)
 
 compile-sqlean-macos:
 	gcc -O1 $(SQLITE_OPTL) $(SQLEAN_OPT) $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean-macos-x86 -target x86_64-apple-macos10.12 $(LINK_LIB)
