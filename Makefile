@@ -5,7 +5,9 @@ SQLITE_RELEASE_YEAR := 2023
 SQLITE_VERSION := 3420000
 SQLEAN_VERSION := 0.21.0
 
-SQLITE_OPT := -DHAVE_READLINE -DSQLITE_ENABLE_DBPAGE_VTAB -DSQLITE_ENABLE_DBSTAT_VTAB -DSQLITE_ENABLE_EXPLAIN_COMMENTS -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_GEOPOLY -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_OFFSET_SQL_FUNC -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_STAT4 -DSQLITE_ENABLE_STMTVTAB -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION -DSQLITE_HAVE_ZLIB -DSQLITE_LIKE_DOESNT_MATCH_BLOBS -DSQLITE_THREADSAFE=0 -DUSE_URI
+SQLITE_OPT := -DSQLITE_ENABLE_DBPAGE_VTAB -DSQLITE_ENABLE_DBSTAT_VTAB -DSQLITE_ENABLE_EXPLAIN_COMMENTS -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_GEOPOLY -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_OFFSET_SQL_FUNC -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_STAT4 -DSQLITE_ENABLE_STMTVTAB -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION -DSQLITE_LIKE_DOESNT_MATCH_BLOBS -DSQLITE_THREADSAFE=0 -DUSE_URI
+
+SQLITE_OPTL := $(SQLITE_OPT) -DHAVE_READLINE -DSQLITE_HAVE_ZLIB
 
 SQLITE_SRC := src/shell.c src/sqlite3.c
 
@@ -40,27 +42,27 @@ prepare-dist:
 	rm -f dist/*
 
 compile-sqlite-linux:
-	gcc -Os $(SQLITE_OPT) $(SQLITE_SRC) -o dist/sqlite3-ubuntu $(LINK_LIB)
+	gcc -Os $(SQLITE_OPTL) $(SQLITE_SRC) -o dist/sqlite3-ubuntu $(LINK_LIB)
 	chmod +x dist/sqlite3-ubuntu
 
 compile-sqlite-windows:
 	gcc -Os -I. $(SQLITE_SRC) -o dist/sqlite3.exe $(SQLITE_OPT)
 
 compile-sqlite-macos:
-	gcc -Os $(SQLITE_OPT) $(SQLITE_SRC) -o dist/sqlite3-macos-x86 -target x86_64-apple-macos10.12 $(LINK_LIB)
-	gcc -Os $(SQLITE_OPT) $(SQLITE_SRC) -o dist/sqlite3-macos-arm -target arm64-apple-macos11 $(LINK_LIB)
+	gcc -Os $(SQLITE_OPTL) $(SQLITE_SRC) -o dist/sqlite3-macos-x86 -target x86_64-apple-macos10.12 $(LINK_LIB)
+	gcc -Os $(SQLITE_OPTL) $(SQLITE_SRC) -o dist/sqlite3-macos-arm -target arm64-apple-macos11 $(LINK_LIB)
 	lipo -create -output dist/sqlite3-macos dist/sqlite3-macos-x86 dist/sqlite3-macos-arm
 	chmod +x dist/sqlite3-macos
 
 compile-sqlean-linux:
-	gcc -O1 $(SQLITE_OPT) $(SQLEAN_OPT) $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean-ubuntu $(LINK_LIB)
+	gcc -O1 $(SQLITE_OPTL)  $(SQLEAN_OPT) $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean-ubuntu $(LINK_LIB)
 	chmod +x dist/sqlean-ubuntu
 
 compile-sqlean-windows:
 	gcc -O1 -I. $(SQLEAN_INC) $(SQLITE_SRC) -o dist/sqlean.exe $(SQLITE_OPT) $(SQLEAN_OPT)
 
 compile-sqlean-macos:
-	gcc -O1 $(SQLITE_OPT) $(SQLEAN_OPT) $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean-macos-x86 -target x86_64-apple-macos10.12 $(LINK_LIB)
-	gcc -O1 $(SQLITE_OPT) $(SQLEAN_OPT) $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean-macos-arm -target arm64-apple-macos11 $(LINK_LIB)
+	gcc -O1 $(SQLITE_OPTL) $(SQLEAN_OPT) $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean-macos-x86 -target x86_64-apple-macos10.12 $(LINK_LIB)
+	gcc -O1 $(SQLITE_OPTL) $(SQLEAN_OPT) $(SQLEAN_INC) $(SQLEAN_SRC) -o dist/sqlean-macos-arm -target arm64-apple-macos11 $(LINK_LIB)
 	lipo -create -output dist/sqlean-macos dist/sqlean-macos-x86 dist/sqlean-macos-arm
 	chmod +x dist/sqlean-macos
