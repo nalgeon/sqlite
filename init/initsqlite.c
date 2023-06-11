@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Anton Zhiyanov, MIT License
+// https://github.com/nalgeon/sqlite
+
 #include "init.h"
 
 int core_init(const char* dummy) {

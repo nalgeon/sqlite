@@ -3,11 +3,6 @@ name: Incubator
 on:
     workflow_dispatch:
 
-env:
-    SQLITE_RELEASE_YEAR: "2023"
-    SQLITE_VERSION: "3420000"
-    SQLEAN_VERSION: "0.21.0"
-
 jobs:
     download-sources:
         name: Download and store sources
@@ -16,20 +11,10 @@ jobs:
             - name: Checkout sources
               uses: actions/checkout@v3
 
-            - name: Download sqlite
+            - name: Download external sources
               run: |
-                  curl -L https://github.com/sqlite/sqlite/raw/master/src/test_windirent.h --output src/test_windirent.h
-                  curl -L http://sqlite.org/$SQLITE_RELEASE_YEAR/sqlite-amalgamation-$SQLITE_VERSION.zip --output sqlite.zip
-                  unzip sqlite.zip
-                  mv sqlite-amalgamation-$SQLITE_VERSION/* src
-
-            - name: Download sqlean
-              run: |
-                  curl -L https://github.com/nalgeon/sqlean/archive/refs/tags/$SQLEAN_VERSION.zip --output sqlean.zip
-                  unzip sqlean.zip
-                  mv sqlean-$SQLEAN_VERSION/src/* src
-                  cat src/sqlite3.c src/initsqlite.c > src/sqlean.c
-                  cat src/shell.c src/initshell.c > src/sqleanshell.c
+                  make download-sqlite
+                  make download-sqlean
 
             - name: Store sources
               uses: actions/upload-artifact@v3
@@ -50,64 +35,11 @@ jobs:
                   name: sqlite-sources
                   path: src
 
-            - name: Compile sqlite
+            - name: Compile sources
               run: |
-                  mkdir -p dist
-                  gcc -Os \
-                    -DHAVE_READLINE \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI \
-                    src/shell.c src/sqlite3.c -o dist/sqlite3-ubuntu \
-                    -ldl -lz -lm -lreadline -lncurses
-                  chmod +x dist/sqlite3-ubuntu
-
-            - name: Compile sqlean
-              run: |
-                  mkdir -p dist
-                  gcc -O1 \
-                    -DHAVE_READLINE \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI \
-                    -DSQLITE_EXTRA_INIT=core_init \
-                    -DSQLEAN_VERSION="\"$SQLEAN_VERSION\"" \
-                    -include src/regexp/constants.h \
-                    src/sqleanshell.c src/sqlean.c src/sqlite3-sqlean.c \
-                    src/crypto/*.c src/define/*.c src/fileio/*.c src/fuzzy/*.c \
-                    src/math/*.c src/regexp/*.c src/regexp/pcre2/*.c src/stats/*.c \
-                    src/text/*.c src/unicode/*.c src/uuid/*.c src/vsv/*.c \
-                    -o dist/sqlean-ubuntu \
-                    -ldl -lz -lm -lreadline -lncurses
-                  chmod +x dist/sqlean-ubuntu
+                  make prepare-dist
+                  make compile-sqlite-linux
+                  make compile-sqlean-linux
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
@@ -131,59 +63,12 @@ jobs:
                   name: sqlite-sources
                   path: src
 
-            - name: Compile sqlite
+            - name: Compile sources
               shell: bash
               run: |
-                  mkdir -p dist
-                  gcc -Os -I. \
-                    src/shell.c src/sqlite3.c \
-                    -o dist/sqlite3.exe \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI
-
-            - name: Compile sqlean
-              shell: bash
-              run: |
-                  mkdir -p dist
-                  gcc -O1 -I. \
-                    -include src/regexp/constants.h
-                    src/sqleanshell.c src/sqlean.c src/sqlite3-sqlean.c \
-                    src/crypto/*.c src/define/*.c src/fileio/*.c src/fuzzy/*.c \
-                    src/math/*.c src/regexp/*.c src/regexp/pcre2/*.c src/stats/*.c \
-                    src/text/*.c src/unicode/*.c src/uuid/*.c src/vsv/*.c \
-                    -o dist/sqlean.exe \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI \
-                    -DSQLITE_EXTRA_INIT=core_init \
-                    -DSQLEAN_VERSION="\"$SQLEAN_VERSION\""
+                  make prepare-dist
+                  make compile-sqlite-windows
+                  make compile-sqlean-windows
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2
@@ -207,135 +92,11 @@ jobs:
                   name: sqlite-sources
                   path: src
 
-            - name: Compile sqlite (x86)
+            - name: Compile sources
               run: |
-                  mkdir -p dist
-                  gcc -Os \
-                    -DHAVE_READLINE \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI \
-                    src/shell.c src/sqlite3.c -o dist/sqlite3-macos-x86 \
-                    -target x86_64-apple-macos10.12 \
-                    -ldl -lz -lm -lreadline -lncurses
-
-            - name: Compile sqlite (arm)
-              run: |
-                  mkdir -p dist
-                  gcc -Os \
-                    -DHAVE_READLINE \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI \
-                    src/shell.c src/sqlite3.c -o dist/sqlite3-macos-arm \
-                    -target arm64-apple-macos11 \
-                    -ldl -lz -lm -lreadline -lncurses
-
-            - name: Create sqlite universal binary
-              run: |
-                  lipo -create -output dist/sqlite3-macos \
-                    dist/sqlite3-macos-x86 dist/sqlite3-macos-arm
-                  chmod +x dist/sqlite3-macos
-
-            - name: Compile sqlean (x86)
-              run: |
-                  mkdir -p dist
-                  gcc -O1 \
-                    -DHAVE_READLINE \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI \
-                    -DSQLITE_EXTRA_INIT=core_init \
-                    -DSQLEAN_VERSION="\"$SQLEAN_VERSION\"" \
-                    -include src/regexp/constants.h \
-                    src/sqleanshell.c src/sqlean.c src/sqlite3-sqlean.c \
-                    src/crypto/*.c src/define/*.c src/fileio/*.c src/fuzzy/*.c \
-                    src/math/*.c src/regexp/*.c src/regexp/pcre2/*.c src/stats/*.c \
-                    src/text/*.c src/unicode/*.c src/uuid/*.c src/vsv/*.c \
-                    -o dist/sqlean-macos-x86 \
-                    -target x86_64-apple-macos10.12 \
-                    -ldl -lz -lm -lreadline -lncurses
-
-            - name: Compile sqlean (arm)
-              run: |
-                  mkdir -p dist
-                  gcc -O1 \
-                    -DHAVE_READLINE \
-                    -DSQLITE_ENABLE_DBPAGE_VTAB \
-                    -DSQLITE_ENABLE_DBSTAT_VTAB \
-                    -DSQLITE_ENABLE_EXPLAIN_COMMENTS \
-                    -DSQLITE_ENABLE_FTS4 \
-                    -DSQLITE_ENABLE_FTS5 \
-                    -DSQLITE_ENABLE_GEOPOLY \
-                    -DSQLITE_ENABLE_JSON1 \
-                    -DSQLITE_ENABLE_MATH_FUNCTIONS \
-                    -DSQLITE_ENABLE_OFFSET_SQL_FUNC \
-                    -DSQLITE_ENABLE_RTREE \
-                    -DSQLITE_ENABLE_STAT4 \
-                    -DSQLITE_ENABLE_STMTVTAB \
-                    -DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION \
-                    -DSQLITE_HAVE_ZLIB \
-                    -DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
-                    -DSQLITE_THREADSAFE=0 \
-                    -DUSE_URI \
-                    -DSQLITE_EXTRA_INIT=core_init \
-                    -DSQLEAN_VERSION="\"$SQLEAN_VERSION\"" \
-                    -include src/regexp/constants.h \
-                    src/sqleanshell.c src/sqlean.c src/sqlite3-sqlean.c \
-                    src/crypto/*.c src/define/*.c src/fileio/*.c src/fuzzy/*.c \
-                    src/math/*.c src/regexp/*.c src/regexp/pcre2/*.c src/stats/*.c \
-                    src/text/*.c src/unicode/*.c src/uuid/*.c src/vsv/*.c \
-                    -o dist/sqlean-macos-arm \
-                    -target arm64-apple-macos11 \
-                    -ldl -lz -lm -lreadline -lncurses
-
-            - name: Create sqlean universal binary
-              run: |
-                  lipo -create -output dist/sqlean-macos \
-                    dist/sqlean-macos-x86 dist/sqlean-macos-arm
-                  chmod +x dist/sqlite3-macos
+                  make prepare-dist
+                  make compile-sqlite-macos
+                  make compile-sqlean-macos
 
             - name: Upload binaries to release
               uses: svenstaro/upload-release-action@v2

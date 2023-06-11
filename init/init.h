@@ -1,3 +1,6 @@
+// Copyright (c) 2023 Anton Zhiyanov, MIT License
+// https://github.com/nalgeon/sqlite
+
 #ifndef INIT_H
 #define INIT_H
 
