@@ -1,8 +1,12 @@
-# SQLite shell builder
+# SQLite / Sqlean builds
 
-Builds and publishes SQLite shell for different OS:
+This repo provides customized builds for `sqlite` and `sqlean`.
 
--   Ubuntu 20.04 shell. Because for some reason "Linux Shell" from SQLite website does not work on Ubuntu.
+## SQLite
+
+Builds and publishes SQLite shell (aka command-line interface or CLI) for different OS:
+
+-   Ubuntu 20.04+ shell (and other Debian-based distributions). Because for some reason "Linux Shell" from SQLite website does not work on Ubuntu.
 -   Windows shell (64-bit). Because SQLite website only provides 32-bit shell.
 -   macOS shell (supports both Intel and Apple processors). Just for convenience.
 
@@ -27,3 +31,45 @@ The list of enabled features:
 -   `USE_URI`. Enables [URI](https://sqlite.org/uri.html) connection strings.
 
 Latest release: [3.42.0](https://github.com/nalgeon/sqlite/releases/3.42.0)
+
+## Sqlean
+
+`sqlean` shell is SQLite shell bundled with a collection of [essential extensions](https://github.com/nalgeon/sqlean) ranging from regular expressions and math statistics to file I/O and dynamic SQL.
+
+```
+  sqlean shell =
+┌────────────────────────┐
+│ sqlite shell           │
+├ + ─────────────────────┤
+│ crypt  define  fileio  │
+│ fuzzy  math    regexp  │
+│ stats  text    unicode │
+│ uuid   vsv             │
+└────────────────────────┘
+```
+
+Builds are available for every OS:
+
+-   `sqlean.exe` - for Windows
+-   `sqlean-ubuntu` - for Ubuntu (and other Debian-based distributions)
+-   `sqlean-macos` - for macOS (supports both Intel and Apple processors)
+
+Latest release: [0.21.0](https://github.com/nalgeon/sqlite/releases/3.42.0-sqlean) (using SQLite 3.42.0).
+
+**Note for macOS users**. macOS disables unsigned binaries and prevents the `sqlean` shell from running. To resolve this issue, remove the build from quarantine by running the following command in Terminal (replace `/path/to/folder` with an actual path to the folder containing the `sqlean-macos` binary):
+
+```
+chmod +x /path/to/folder/sqlean-macos
+xattr -d com.apple.quarantine /path/to/folder/sqlean-macos
+```
+
+And then run the shell:
+
+```
+$ /path/to/folder/sqlean-macos
+SQLite version 3.42.0 2023-05-16 12:36:15
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlean> █
+```
