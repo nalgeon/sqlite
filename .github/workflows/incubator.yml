@@ -13,6 +13,7 @@ jobs:
 
             - name: Download external sources
               run: |
+                  make prepare-src
                   make download-sqlite
                   make download-sqlean
 
