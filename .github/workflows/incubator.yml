@@ -44,15 +44,6 @@ jobs:
                   make compile-sqlite-linux
                   make compile-sqlean-linux
 
-            - name: Upload binaries to release
-              uses: svenstaro/upload-release-action@v2
-              with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  file: dist/*-ubuntu
-                  file_glob: true
-                  overwrite: true
-                  tag: incubator
-
     build-windows:
         name: Build for Windows
         runs-on: windows-2019
@@ -72,15 +63,6 @@ jobs:
                   make compile-sqlite-windows
                   make compile-sqlean-windows
 
-            - name: Upload binaries to release
-              uses: svenstaro/upload-release-action@v2
-              with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  file: dist/*.exe
-                  file_glob: true
-                  overwrite: true
-                  tag: incubator
-
     build-macos:
         name: Build for macOS
         runs-on: macos-11
@@ -98,12 +80,3 @@ jobs:
                   make prepare-dist
                   make compile-sqlite-macos
                   make compile-sqlean-macos
-
-            - name: Upload binaries to release
-              uses: svenstaro/upload-release-action@v2
-              with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  file: dist/*-macos
-                  file_glob: true
-                  overwrite: true
-                  tag: incubator
