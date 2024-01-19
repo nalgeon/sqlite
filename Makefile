@@ -1,7 +1,7 @@
 # Copyright (c) 2023 Anton Zhiyanov, MIT License
 # https://github.com/nalgeon/sqlite
 
-SQLITE_RELEASE_YEAR := 2023
+SQLITE_RELEASE_YEAR := 2024
 SQLITE_VERSION := 3450000
 SQLEAN_VERSION := 0.21.8
 
