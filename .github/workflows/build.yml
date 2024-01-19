@@ -57,7 +57,7 @@ jobs:
 
     build-windows:
         name: Build for Windows
-        runs-on: windows-2019
+        runs-on: windows-latest
         needs: download-sources
         permissions:
             contents: write
