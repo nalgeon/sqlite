@@ -30,7 +30,7 @@ The list of enabled features:
 -   `SQLITE_THREADSAFE=0`. Turns off support for multithreaded environment.
 -   `SQLITE_USE_URI`. Enables [URI](https://sqlite.org/uri.html) connection strings.
 
-Latest release: [3.45.1](https://github.com/nalgeon/sqlite/releases/3.45.1)
+Latest release: [3.46.0](https://github.com/nalgeon/sqlite/releases/latest)
 
 ## Sqlean
 
@@ -54,7 +54,7 @@ Builds are available for every OS:
 -   `sqlean-ubuntu` - for Ubuntu (and other Debian-based distributions)
 -   `sqlean-macos` - for macOS (supports both Intel and Apple processors)
 
-Latest release: [3.45.1](https://github.com/nalgeon/sqlite/releases/3.45.1) (using Sqlean 0.21.10).
+Latest release: [3.46.0](https://github.com/nalgeon/sqlite/releases/latest) (using Sqlean 0.24.0).
 
 **Note for macOS users**. macOS disables unsigned binaries and prevents the `sqlean` shell from running. To resolve this issue, remove the build from quarantine by running the following command in Terminal (replace `/path/to/folder` with an actual path to the folder containing the `sqlean-macos` binary):
 
