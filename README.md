@@ -2,6 +2,8 @@
 
 This repo provides customized builds for [`sqlite`](https://sqlite.org) and [`sqlean`](https://github.com/nalgeon/sqlean) shells.
 
+The project is no longer maintained.
+
 ## SQLite
 
 Builds and publishes SQLite shell (aka command-line interface or CLI) for different Linux, Windows and macOS.
